@@ -26,3 +26,7 @@ jangada --install /caminho/para/uBlockTube
 ## Créditos
 
 As regras de campos de anúncio se baseiam nas listas de filtros do [uBlock Origin](https://github.com/gorhill/uBlock) (GPL-3.0). Este projeto não é afiliado ao uBlock Origin nem à Jangada.
+
+## Licença
+
+GNU GPL versão 3 ou posterior (GPL-3.0-or-later), a mesma do uBlock Origin. Veja o arquivo [LICENSE](LICENSE).
