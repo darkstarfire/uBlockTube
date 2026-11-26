@@ -17,6 +17,7 @@ O bloqueio tem duas partes, que rodam em mundos diferentes:
 ```
 uBlockTube/
 ├── manifest.json            manifesto (Manifest V3)
+├── icons/                   ícone do botão na barra da Jangada (PNG e SVG-fonte)
 ├── js/
 │   ├── content/
 │   │   └── main.js          script de conteúdo: injeta os ganchos na página
