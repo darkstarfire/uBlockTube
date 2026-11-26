@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "uBlockTube",
+  "version": "1.0",
+  "description": "Remove os anúncios do player do YouTube (regras baseadas nas listas do uBlock Origin)",
+  "content_scripts": [
+    { "matches": ["*://*.youtube.com/*"], "js": ["ola.js"], "run_at": "document_start" }
+  ]
+}
