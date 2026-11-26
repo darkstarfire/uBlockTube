@@ -47,6 +47,16 @@ Para instalar direto do GitHub, o repositório precisa ser público:
 jangada --install https://github.com/darkstarfire/uBlockTube
 ```
 
+## Versionamento
+
+A versão segue `MAIOR.MEIO.PATCH`:
+
+- **PATCH** (último número): melhorias pequenas, como ajustar uma regra ou corrigir um caso de anúncio. Ex.: `0.1.2` → `0.1.3`.
+- **MEIO**: mudanças médias, como tratar um novo tipo de resposta ou reorganizar um arquivo. Ex.: `0.1.2` → `0.2.0`.
+- **MAIOR**: `1.0.0` quando a extensão cobrir sites suficientes, além do YouTube.
+
+Enquanto o projeto estiver em `0.x`, a versão indica que ele ainda está em fase inicial.
+
 ## Créditos
 
 As regras de campos de anúncio se baseiam nas listas de filtros do [uBlock Origin](https://github.com/gorhill/uBlock) (GPL-3.0). Este projeto não é afiliado ao uBlock Origin nem à Jangada.
