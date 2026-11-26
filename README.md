@@ -22,6 +22,8 @@ uBlockTube/
 │   │   └── main.js          script de conteúdo: injeta os ganchos na página
 │   └── page/
 │       └── youtube-hooks.js ganchos da página (fetch, XHR, dados iniciais)
+├── docs/
+│   └── RELATORIO.md         relatório técnico: arquitetura, testes e limitações
 ├── LICENSE                  GPL-3.0
 └── README.md
 ```
