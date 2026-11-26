@@ -1,9 +1,13 @@
-// Bloqueio de anúncios do YouTube para a Jangada.
-// Roda no começo da página (run_at: document_start). Remove os campos de anúncio das
-// respostas do player (fetch e XMLHttpRequest) e dos dados iniciais do primeiro vídeo.
-// Não cancela streams de vídeo: anúncios que chegarem por aí não são tratados aqui.
+// Ganchos da página (mundo principal do YouTube).
+//
+// Este arquivo é carregado como script de conteúdo, mas a função pageHooks não roda aqui:
+// js/content/main.js a converte em texto e a injeta na página, onde ela troca fetch,
+// XMLHttpRequest e ytInitialPlayerResponse para remover os campos de anúncio das respostas
+// do player. Por isso a função não pode usar nada de fora dela.
 
-function principalYouTube() {
+window.uBlockTube = window.uBlockTube || {};
+
+window.uBlockTube.pageHooks = function () {
   // Respostas em que os campos de anúncio são removidos.
   var TRATAR = /\/youtubei\/v1\/(player|next|browse)|get_watch|get_midroll|reel_watch_sequence|\/playlist\?|\/watch\?(.*&)?(v=|pbj=)/;
   // Respostas que são lidas (o corpo do vídeo em si não é).
@@ -112,11 +116,4 @@ function principalYouTube() {
     // A página já definiu a variável (não configurável): limpa o objeto que ela tem agora.
     if (window.ytInitialPlayerResponse) { limpar(window.ytInitialPlayerResponse); }
   }
-}
-
-(function () {
-  var s = document.createElement("script");
-  s.textContent = "(" + principalYouTube.toString() + ")();";
-  (document.head || document.documentElement).appendChild(s);
-  s.remove();
-})();
+};

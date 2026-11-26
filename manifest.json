@@ -4,6 +4,10 @@
   "version": "1.0",
   "description": "Remove os anúncios do player do YouTube (regras baseadas nas listas do uBlock Origin)",
   "content_scripts": [
-    { "matches": ["*://*.youtube.com/*"], "js": ["ola.js"], "run_at": "document_start" }
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["js/page/youtube-hooks.js", "js/content/main.js"],
+      "run_at": "document_start"
+    }
   ]
 }
