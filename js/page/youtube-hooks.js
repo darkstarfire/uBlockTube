@@ -19,8 +19,13 @@ window.uBlockTube.pageHooks = function () {
   // parâmetro expire tem o formato dos anúncios; os vídeos normais começam com 1.
   var STREAM_ANUNCIO = /\.googlevideo\.com\/videoplayback\?expire=(?:[02-9]\d+|1[1-68-9]\d+|17[1-7]\d+)&/;
 
+  // Ligado por padrão. A janelinha da extensão desliga marcando o <html> com "nao".
+  function ligado() {
+    return document.documentElement.dataset.ublocktubeAtivo !== "nao";
+  }
+
   function limpar(obj) {
-    if (!obj || typeof obj !== "object") { return false; }
+    if (!ligado() || !obj || typeof obj !== "object") { return false; }
     var mudou = false;
     // Respostas em lista (formato pbj=1 do YouTube): trata cada item.
     if (Array.isArray(obj)) {
@@ -52,7 +57,7 @@ window.uBlockTube.pageHooks = function () {
   window.fetch = function (entrada) {
     var url = typeof entrada === "string" ? entrada : (entrada && entrada.url) || "";
     var metodo = (entrada && entrada.method) || (arguments[1] && arguments[1].method) || "GET";
-    if (String(metodo).toUpperCase() === "GET" && STREAM_ANUNCIO.test(url)) {
+    if (ligado() && String(metodo).toUpperCase() === "GET" && STREAM_ANUNCIO.test(url)) {
       return Promise.reject(new TypeError("stream de anúncio bloqueado"));
     }
     var promessa = fetchOriginal.apply(this, arguments);
@@ -81,7 +86,7 @@ window.uBlockTube.pageHooks = function () {
     };
     var enviarOriginal = XP.send;
     XP.send = function () {
-      if (this.__ytMetodo === "GET" && STREAM_ANUNCIO.test(this.__ytUrl || "")) {
+      if (ligado() && this.__ytMetodo === "GET" && STREAM_ANUNCIO.test(this.__ytUrl || "")) {
         this.abort();
         return;
       }
