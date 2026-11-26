@@ -30,7 +30,7 @@ uBlockTube/
 
 ## Limitações
 
-- Anúncios que chegam pelo próprio stream de vídeo (`googlevideo.com/videoplayback`) não são tratados. Esse tipo de bloqueio precisa ser feito na rede, pelos escudos do navegador.
+- Streams de vídeo de anúncio (`googlevideo.com/videoplayback`) são cancelados só quando o parâmetro `expire` tem o formato dos anúncios (a regra do uBlock Origin). Um anúncio com outro formato ainda pode passar; nesse caso o bloqueio precisa ser feito na rede, pelos escudos do navegador.
 - O YouTube muda os nomes dos campos com frequência. Se os anúncios voltarem, as regras de `js/page/youtube-hooks.js` precisam ser atualizadas.
 
 ## Instalação

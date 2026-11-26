@@ -15,6 +15,9 @@ window.uBlockTube.pageHooks = function () {
   // Só se tenta converter o texto quando um desses nomes aparece.
   var TEM_ANUNCIO = /adPlacements|adSlots|playerAds|no_ads|adBreak|adPlacement|adSlot|instreamAd|adunit/;
   var CHAVES = ["playerAds", "adPlacements", "adSlots", "no_ads"];
+  // Streams de vídeo de anúncio. Regra do uBlock Origin (quick-fixes, www.youtube.com): o
+  // parâmetro expire tem o formato dos anúncios; os vídeos normais começam com 1.
+  var STREAM_ANUNCIO = /\.googlevideo\.com\/videoplayback\?expire=(?:[02-9]\d+|1[1-68-9]\d+|17[1-7]\d+)&/;
 
   function limpar(obj) {
     if (!obj || typeof obj !== "object") { return false; }
@@ -48,6 +51,10 @@ window.uBlockTube.pageHooks = function () {
   var fetchOriginal = window.fetch;
   window.fetch = function (entrada) {
     var url = typeof entrada === "string" ? entrada : (entrada && entrada.url) || "";
+    var metodo = (entrada && entrada.method) || (arguments[1] && arguments[1].method) || "GET";
+    if (String(metodo).toUpperCase() === "GET" && STREAM_ANUNCIO.test(url)) {
+      return Promise.reject(new TypeError("stream de anúncio bloqueado"));
+    }
     var promessa = fetchOriginal.apply(this, arguments);
     if (!OLHAR.test(url)) { return promessa; }
     return promessa.then(function (resposta) {
@@ -69,7 +76,16 @@ window.uBlockTube.pageHooks = function () {
     var abrirOriginal = XP.open;
     XP.open = function (metodo, url) {
       this.__ytUrl = String(url);
+      this.__ytMetodo = String(metodo || "GET").toUpperCase();
       return abrirOriginal.apply(this, arguments);
+    };
+    var enviarOriginal = XP.send;
+    XP.send = function () {
+      if (this.__ytMetodo === "GET" && STREAM_ANUNCIO.test(this.__ytUrl || "")) {
+        this.abort();
+        return;
+      }
+      return enviarOriginal.apply(this, arguments);
     };
     var descTexto = Object.getOwnPropertyDescriptor(XP, "responseText");
     var descResposta = Object.getOwnPropertyDescriptor(XP, "response");

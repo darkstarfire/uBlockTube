@@ -43,14 +43,14 @@ Os testes foram feitos manualmente, na Jangada, com o YouTube aberto. Cada rodad
 | Remoção em `fetch` e `XHR` | Funcionou para a navegação manual e a troca de vídeos pela playlist. |
 | Anúncio antes do primeiro vídeo (carregamento direto) | Persistiu com a injeção tardia. Resolvido com `run_at: document_start` e com o tratamento de `ytInitialPlayerResponse`. |
 | Autoplay de playlist | Anúncios apareciam de forma aleatória. Resolvido ao tratar `/watch?v=` em formato de lista (`pbj=1`). |
-| Stream de vídeo do anúncio (`googlevideo.com/videoplayback`) | Apareceu em alguns testes. Uma regra de cancelamento baseada no uBlock Origin foi testada (XHR e `fetch`) e não disparou em nenhum teste. Foi removida da versão final. |
+| Stream de vídeo do anúncio (`googlevideo.com/videoplayback`) | Apareceu em alguns testes. A regra de cancelamento do uBlock Origin (`expire` com formato de anúncio), aplicada em `fetch` e XHR, disparou em testes de navegação e de autoplay (de 4 a 10 bloqueios por sessão), sem anúncio visível e sem travar o vídeo. Foi incorporada na versão 0.1.3. |
 | Última rodada | Sem anúncio aparente. |
 
-Os anúncios que ainda podem aparecer são os que chegam pelo stream de vídeo. A extensão não consegue bloqueá-los só com os ganchos, porque o stream é carregado por um caminho fora de `fetch` e XHR, ou porque a regra depende de valores de `expire` que mudam.
+Antes dessa regra, anúncios que passavam pelo stream não eram tratados pelos ganchos, porque o stream não é uma resposta JSON. Com a regra, o stream de anúncio que casa com o padrão é cancelado antes de ser baixado.
 
 ## 4. Limitações
 
-- **Streams de anúncio**: anúncios que chegam pelo próprio `googlevideo.com/videoplayback` não são tratados. Esse tipo de bloqueio exige regras de rede no navegador (os escudos da Jangada), e não pode ser feito de forma confiável por JavaScript na página.
+- **Streams de anúncio**: só são cancelados os streams cujo `expire` tem o formato dos anúncios, segundo a regra do uBlock Origin. Se o YouTube mudar esse formato, um anúncio pode voltar pelo stream. Uma solução completa exige regras de rede no navegador (os escudos da Jangada).
 - **Mudanças do YouTube**: os nomes dos campos e dos endereços mudam com frequência. Se os anúncios voltarem, a primeira coisa a verificar é se o campo de anúncio ou o endereço da resposta ainda existe na lista de `TRATAR`, `OLHAR` e `TEM_ANUNCIO`.
 - **Dependência de versão**: a injeção no começo do documento exige a Jangada 2.1.6 ou mais recente.
 - **Erro de propriedade não configurável**: se a página definir `ytInitialPlayerResponse` antes do script, o setter não é instalado. A extensão cai no plano B, que limpa o objeto existente. Isso é o que aparece como `TypeError: Attempting to change configurable attribute of unconfigurable property` nos diagnósticos, e não quebra o bloqueio.
